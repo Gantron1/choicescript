@@ -1,0 +1,3 @@
+[submodule "web/julhair"]
+	path = web/julhair
+	url = https://Gantron@bitbucket.org/Gantron/julhair.git
