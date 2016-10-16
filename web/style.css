@@ -1,9 +1,10 @@
 body {
   max-width: 680px;
   _width:expression(this.scrollWidth > 680 ? "680px" : "auto");
+  background-image: url("images/28-faded-parchment-background-sml.jpg");  
+  font-family: "DejaVu Sans", Georgia,"Times New Roman",serif;
   font-size: 100%;  /* reset for CWS */
   font: -apple-system-body; /* we'll override the font, but keep the size from iOS dynamic text sizing */
-  font-family: Georgia,"Times New Roman",serif;
   background-color: #F7F4F1;
   color: rgba(0, 0, 0, 0.85);
   margin: 8px auto; 
@@ -19,6 +20,13 @@ a {
 }
 
 #main {
+	color: black;
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-width:1px 1px 1px 1px; 
+  border-color:black; 
+  border-style:solid; 
+  padding: 10px;
 	line-height: 1.5;
 }
 
@@ -130,8 +138,10 @@ input[type=email],input[type=password] {
     font-family: -apple-system, sans-serif; /* reset, for Android */
     margin-bottom: 1em; /* reset button margin */
     -webkit-appearance: none; /* Safari, don't override my CSS styles */
-    color: #f7f4f1; /* Match background color */ 
-    background-color: #626160;
+    //color: #f7f4f1; /* Match background color */ 
+    //background-color: #626160;
+    color: white;
+    background-color: olivedrab;
     border: none;
     -webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
