@@ -1,0 +1,54 @@
+*comment *********************
+*comment **     HEADER      **
+*comment *********************
+
+*title Title of Your GREAT Story
+*author Frankie Lee
+*scene_list
+	startup
+
+*create debug true
+*create secretjump false
+*create jumplabel ""
+
+*comment *********************
+*comment **  ACHIEVEMENTS   **
+*comment *********************
+
+*achievement achievementName visible 5 AchievementTitle
+	Pre-achievement text.
+	Post-achievement text.
+
+*comment *********************
+*comment **      STATS      **
+*comment *********************
+
+*comment *********************
+*comment **  RELATIONSHIPS  **
+*comment *********************
+
+*comment *********************
+*comment **  SITUATIONALS   **
+*comment *********************
+
+*comment *************************
+*comment *************************
+*comment ****    TEST GOTO    ****
+*comment *************************
+*comment *************************
+
+*comment *********************
+*comment **    THE GAME!    **
+*comment *********************
+
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=40&text=The%20Travailer:&color=000000&matte=F0D6AD&shadow=inv
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=30&text=Title%20of%20This%20GREAT%20Story%20&color=000000&matte=F0D6AD&shadow=inv
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=25&text=by&color=000000&matte=F0D6AD&shadow=inv
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=25&text=Frankie%20Lee&color=000000&matte=F0D6AD&shadow=inv
+[b]WARNING: [/b]This game is a work of erotica and contains explicit sexual content. Reader discretion is advised. 
+
+Do not play this game if you are a minor.
+
+[b]Background Info:[/b]
+
+*page_break Onward!
