@@ -1,0 +1,1 @@
+This is a story-game for choicescript. Put this folder into the "web" folder and point your browser at the index.html.

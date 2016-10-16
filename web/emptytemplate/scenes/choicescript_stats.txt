@@ -1,0 +1,8 @@
+This is a stats screen!
+
+*comment *stat_chart
+*comment   percent Leadership
+*comment   opposed_pair Strength
+*comment     Weakness
+*comment   text Leadership
+*comment   text Strength
