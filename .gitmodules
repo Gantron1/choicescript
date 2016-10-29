@@ -4,3 +4,6 @@
 [submodule "web/shyslut"]
 	path = web/shyslut
 	url = https://Gantron@bitbucket.org/Gantron/shyslut.git
+[submodule "web/julknight"]
+	path = web/julknight
+	url = git@bitbucket.org:Gantron/julknight.git
