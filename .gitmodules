@@ -7,3 +7,6 @@
 [submodule "web/julknight"]
 	path = web/julknight
 	url = git@bitbucket.org:Gantron/julknight.git
+[submodule "web/dragon"]
+	path = web/dragon
+	url = git@bitbucket.org:Gantron/dragon.git
