@@ -10,3 +10,6 @@
 [submodule "web/dragon"]
 	path = web/dragon
 	url = git@bitbucket.org:Gantron/dragon.git
+[submodule "web/sugar"]
+	path = web/sugar
+	url = git@bitbucket.org:Gantron/sugar.git
