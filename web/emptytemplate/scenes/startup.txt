@@ -15,7 +15,7 @@
 *comment **  ACHIEVEMENTS   **
 *comment *********************
 
-*achievement achievementName visible 5 AchievementTitle
+*achievement name visible 5 AchievementTitle
 	Pre-achievement text.
 	Post-achievement text.
 
@@ -41,8 +41,8 @@
 *comment **    THE GAME!    **
 *comment *********************
 
-*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=40&text=The%20Travailer:&color=000000&matte=F0D6AD&shadow=inv
-*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=30&text=Title%20of%20This%20GREAT%20Story%20&color=000000&matte=F0D6AD&shadow=inv
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=40&text=The%20Travailer%20Sagas:&color=000000&matte=F0D6AD&shadow=inv
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=30&text=TITLE%20OF%20THIS%20GREAT%20STORY&color=000000&matte=F0D6AD&shadow=inv
 *image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=25&text=by&color=000000&matte=F0D6AD&shadow=inv
 *image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=25&text=Frankie%20Lee&color=000000&matte=F0D6AD&shadow=inv
 [b]WARNING: [/b]This game is a work of erotica and contains explicit sexual content. Reader discretion is advised. 

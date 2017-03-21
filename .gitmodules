@@ -13,3 +13,15 @@
 [submodule "web/sugar"]
 	path = web/sugar
 	url = git@bitbucket.org:Gantron/sugar.git
+[submodule "web/valkyra"]
+	path = web/valkyra
+	url = git@bitbucket.org:Gantron/valkyra.git
+[submodule "web/utopia"]
+	path = web/utopia
+	url = git@bitbucket.org:Gantron/utopia.git
+[submodule "web/escort"]
+	path = web/escort
+	url = git@bitbucket.org:Gantron/escort.git
+[submodule "web/dryad"]
+	path = web/dryad
+	url = git@bitbucket.org:Gantron/dryad.git
