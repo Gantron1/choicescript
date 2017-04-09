@@ -25,3 +25,6 @@
 [submodule "web/dryad"]
 	path = web/dryad
 	url = git@bitbucket.org:Gantron/dryad.git
+[submodule "web/Fax"]
+	path = web/Fax
+	url = git@bitbucket.org:Gantron/fax.git
