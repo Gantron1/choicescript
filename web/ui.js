@@ -569,6 +569,8 @@ function printImage(source, alignment, alt) {
   img.src = source;
   if (alt !== null && String(alt).length > 0) img.setAttribute("alt", alt);
   setClass(img, "align"+alignment);
+  img.height = 1000;
+  img.width = 2000;
   document.getElementById("text").appendChild(img);
 }
 
