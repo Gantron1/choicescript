@@ -28,3 +28,6 @@
 [submodule "web/Fax"]
 	path = web/Fax
 	url = git@bitbucket.org:Gantron/fax.git
+[submodule "web/masturfest"]
+	path = web/masturfest
+	url = ssh://git@bitbucket.org/Gantron/masturfest.git
