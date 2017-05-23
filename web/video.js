@@ -368,12 +368,19 @@ console.log("NEW VIDEO");
 
 		velt.videoHeight = velt.videoElement.videoHeight;
 		velt.videoWidth = velt.videoElement.videoWidth;
-		velt.videoElement.style.height = velt.videoHeight + 'px';
-		velt.videoElement.style.width = velt.videoWidth + 'px';
-
 		var stage = document.getElementById('stage');
-		stage.style.height = velt.videoHeight + 'px';
-		stage.style.width = velt.videoWidth + 'px';
+		if (velt.videoWidth > mainText.offsetWidth) {
+			var newHeight = mainText.offsetWidth / velt.videoWidth * velt.videoHeight;
+			velt.videoElement.style.height = Math.floor(newHeight) + 'px';
+			velt.videoElement.style.width = mainText.offsetWidth + 'px';
+			stage.style.height = Math.floor(newHeight) + 'px';
+			stage.style.width = mainText.offsetWidth + 'px';
+		} else {
+			velt.videoElement.style.height = velt.videoHeight + 'px';
+			velt.videoElement.style.width = velt.videoWidth + 'px';
+			stage.style.height = velt.videoHeight + 'px';
+			stage.style.width = velt.videoWidth + 'px';
+		}
 
 		velt.videoElement.currentTime = velt.videoElementStart;
 
@@ -409,11 +416,18 @@ function videoMaker(thevideo) {
   
 	v.addEventListener( "loadedmetadata", function (e) {
 		// Set size of stage and video
-		v.style.height = v.videoHeight + 'px';
-		v.style.width = v.videoWidth + 'px';
-
-		stage.style.height = v.videoHeight + 'px';
-		stage.style.width = v.videoWidth + 'px';
+		if (v.videoWidth > mainText.offsetWidth) {
+			var newHeight = mainText.offsetWidth / v.videoWidth * v.videoHeight;
+			v.style.height = Math.floor(newHeight) + 'px';
+			v.style.width = mainText.offsetWidth + 'px';
+			stage.style.height = Math.floor(newHeight) + 'px';
+			stage.style.width = mainText.offsetWidth + 'px';
+		} else {
+			v.style.height = v.videoHeight + 'px';
+			v.style.width = v.videoWidth + 'px';
+			stage.style.height = v.videoHeight + 'px';
+			stage.style.width = v.videoWidth + 'px';
+		}
 
 		// Use velt object to hold start and end
 		velt.videoElementStart = round(v.seekable.start(0), 100),
