@@ -269,7 +269,7 @@ function showVideo2_ac(thevideo, start, end, startRate, startScale, startx, star
 // And so on... Make more such functions as needed.
 
 function showVideo(thevideo, autoplay=true, loop=true, controls=false, topBottom=0, start=0, end=0, startRate=1, endRate=1, startScale=1, endScale=1, startx=null, starty=null, endx=null, endy=null) {
-/* Master function called by above wrapper functions. This master function has parms for everthing that can be done to the video. Should error-check these parms. 
+/* Master function called by above wrapper functions. This master function has parms for everything that can be done to the video. Should error-check these parms. 
  *
  * Adds video tag (with stage div) to the game's text, above if topBottom is set to 0 and below if topBottom is anything else. Initializes global object for the video, velt. Sets the animation (transformations) to run.
 */
