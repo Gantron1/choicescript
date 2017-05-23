@@ -165,6 +165,16 @@ var transformVideo = function() {
 	transformVideo.requestID = requestAnimationFrame(transformVideo);
 }
 
+/* What these function names mean:
+ *
+ * a = autoplay
+ * l = loop
+ * c = controls
+ *
+ * Latest/greatest is showVideo2_[alc]+, as it allows optional pan and zoom. You have to put in the rate, scale, and x/y offsets, but can leave out the second set if there's no pan/zoom. It puts the video at the top of the page above any text.
+ *
+ */
+
 function showVideoAtTop_alc(thevideo) {
 // Simple function to place video at the top of the game's text. Autoplays and loops. Has controls.
 	showVideo(thevideo, true, true, true);
