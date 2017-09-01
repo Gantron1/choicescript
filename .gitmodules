@@ -31,3 +31,18 @@
 [submodule "web/masturfest"]
 	path = web/masturfest
 	url = ssh://git@bitbucket.org/Gantron/masturfest.git
+[submodule "web/muriel"]
+	path = web/muriel
+	url = git@bitbucket.org:Gantron/muriel.git
+[submodule "web/squeen"]
+	path = web/squeen
+	url = git@bitbucket.org:Gantron/squeen.git
+[submodule "web/nyx"]
+	path = web/nyx
+	url = git@bitbucket.org:Gantron/nyx.git
+[submodule "web/ilylana"]
+	path = web/ilylana
+	url = git@bitbucket.org:Gantron/ilylana.git
+[submodule "web/scout1"]
+	path = web/scout1
+	url = git@bitbucket.org:Gantron/scout1.git
