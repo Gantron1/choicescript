@@ -17,8 +17,7 @@
  * either express or implied.
  */
 
-// usage: randomtest iterations gameName randomSeed delay trial
-// e.g.   randomtest 10000 mygame 0 false false
+// usage: randomtest num=10000 game=mygame seed=0 delay=false trial=false
 
 var isRhino = false;
 var iterations = 10;
@@ -31,17 +30,43 @@ var showText = false;
 var highlightGenderPronouns = false;
 var showChoices = true;
 var avoidUsedOptions = true;
+var recordBalance = false;
 var slurps = {}
 function parseArgs(args) {
-  if (args[0]) iterations = args[0];
-  if (args[1]) gameName = args[1];
-  if (args[2]) randomSeed = args[2];
-  if (args[3]) delay = args[3] && args[3] !== "false";
-  if (args[4]) isTrial = args[4] && args[4] !== "false";
-  if (args[5]) showText = args[5] && args[5] !== "false";
-  if (args[6]) avoidUsedOptions = args[6] && args[6] !== "false";
-  if (args[7]) showChoices = args[7] && args[7] !== "false";
+  for (var i = 0; i < args.length; i++) {
+    var parts = args[i].split("=");
+    if (parts.length !== 2) throw new Error("Couldn't parse argument " + (i+1) + ": " + args[i]);
+    var name = parts[0];
+    var value = parts[1];
+    if (name === "num") {
+      iterations = value;
+    } else if (name === "game") {
+      gameName = value;
+    } else if (name === "seed") {
+      randomSeed = value;
+    } else if (name === "delay") {
+      delay = (value !== "false");
+    } else if (name === "trial") {
+      isTrial = (value !== "false");
+    } else if (name === "showText") {
+      showText = (value !== "false");
+    } else if (name === "avoidUsedOptions") {
+      avoidUsedOptions = (value !== "false");
+    } else if (name === "showChoices") {
+      showChoices = (value !== "false");
+    } else if (name === "showCoverage") {
+      showCoverage = (value !== "false");
+    } else if (name === "recordBalance") {
+      recordBalance = (value !== "false");
+    }
+  }
   if (showText) showCoverage = false;
+  if (recordBalance) {
+    showText = false;
+    showChoices = false;
+    showCoverage = false;
+    avoidUsedOptions = false;
+  }
 }
 
 var wordCount = 0;
@@ -136,6 +161,7 @@ if (typeof importScripts != "undefined") {
     showChoices = event.data.showChoices;
     highlightGenderPronouns = event.data.highlightGenderPronouns;
     avoidUsedOptions = event.data.avoidUsedOptions;
+    recordBalance = event.data.recordBalance;
     if (event.data.sceneContent) {
       for (scene in event.data.sceneContent) {
         slurps['web/'+gameName+'/scenes/'+scene] = event.data.sceneContent[scene];
@@ -153,6 +179,11 @@ if (typeof importScripts != "undefined") {
         console.log(lineBuffer.join(""));
         lineBuffer = [];
       };
+      printParagraph = function printParagraph(msg) {
+        if (msg === null || msg === undefined || msg === "") return;
+        println(msg);
+        console.log("");
+      };
 
       Scene.prototype.printLine = oldPrintLine;
     }
@@ -163,14 +194,18 @@ if (typeof importScripts != "undefined") {
   args.shift();
   args.shift();
   parseArgs(args);
-  var fs = require('fs');
-  var path = require('path');
-  eval(fs.readFileSync("web/scene.js", "utf-8"));
-  eval(fs.readFileSync("web/navigator.js", "utf-8"));
-  eval(fs.readFileSync("web/util.js", "utf-8"));
-  eval(fs.readFileSync("headless.js", "utf-8"));
-  eval(fs.readFileSync("seedrandom.js", "utf-8"));
-  eval(fs.readFileSync("web/"+gameName+"/"+"mygame.js", "utf-8"));
+  fs = require('fs');
+  path = require('path');
+  vm = require('vm');
+  load = function(file) {
+    vm.runInThisContext(fs.readFileSync(file), file);
+  };
+  load("web/scene.js");
+  load("web/navigator.js");
+  load("web/util.js");
+  load("headless.js");
+  load("seedrandom.js");
+  load("web/"+gameName+"/"+"mygame.js");
 } else if (typeof args == "undefined") {
   isRhino = true;
   args = arguments;
@@ -225,7 +260,7 @@ function chooseIndex(options, choiceLine, sceneName) {
 }
 
 var printed = [];
-printx = println = function printx(msg, parent) {
+printx = println = printParagraph = function printx(msg, parent) {
   //printed.push(msg);
 }
 
@@ -241,6 +276,7 @@ function debughelp() {
 function noop() {}
 Scene.prototype.page_break = function randomtest_page_break(buttonText) {
   this.paragraph();
+  buttonText = this.replaceVariables(buttonText);
   println("*page_break " + buttonText);
   println("");
   this.resetCheckedPurchases();
@@ -257,6 +293,14 @@ if (showText) {
     var logMsg = lineBuffer.join("");
     console.log(logMsg);
     lineBuffer = [];
+  };
+  printParagraph = function printParagraph(msg) {
+    if (msg === null || msg === undefined || msg === "") return;
+    msg = String(msg)
+      .replace(/\[n\/\]/g, '\n')
+      .replace(/\[c\/\]/g, '');
+    println(msg);
+    console.log("");
   };
 } else {
   oldPrintLine = Scene.prototype.printLine;
@@ -285,6 +329,38 @@ Scene.prototype.randomLog = function randomLog(msg) {
 }
 
 Scene.prototype.randomtest = true;
+
+var balanceValues = {};
+function findBalancedValue(values, percentage) {
+  var targetPosition = values.length * percentage / 100;
+  values.sort();
+  var prevValue = values[0];
+  var prevPrevValue = values[0];
+  for (var i = 1; i < values.length; i++) {
+    if (values[i] == prevValue) continue;
+    if (i >= targetPosition) {
+      return (prevValue + values[i]) / 2;
+    }
+    prevPrevValue = prevValue;
+    prevValue = values[i];
+  }
+  return (prevPrevValue + prevValue) / 2;
+}
+
+Scene.prototype.recordBalance = function(value, operator, rate, id) {
+  if (!recordBalance) return 50;
+  if (!balanceValues[this.name]) balanceValues[this.name] = {};
+  if (balanceValues[this.name][id] && balanceValues[this.name][id].length > 999) {
+    if (operator == ">" || operator == ">=") rate = 100 - rate;
+    var statName = 'auto' + '_' + this.name + '_' + id;
+    var result = findBalancedValue(balanceValues[this.name][id], rate);
+    this.nav.startingStats[statName] = this.stats[statName] = result;
+    return result;
+  }
+  if (!balanceValues[this.name][id]) balanceValues[this.name][id] = [];
+  balanceValues[this.name][id].push(num(value, this.line));
+  throw new Error("record balance");
+}
 
 Scene.prototype.save_game = noop;
 
@@ -345,7 +421,10 @@ Scene.prototype.nextNonBlankLine = function cached_nextNonBlankLine(includingThi
 cachedTokenizedExpressions = {};
 Scene.prototype.oldTokenizeExpr = Scene.prototype.tokenizeExpr;
 Scene.prototype.tokenizeExpr = function cached_tokenizeExpr(str) {
-  var cached = cachedTokenizedExpressions[str];
+  var cached;
+  if (cachedTokenizedExpressions.hasOwnProperty(str)) {
+    cached = cachedTokenizedExpressions[str];
+  }
   if (cached) return cloneStack(cached);
   cached = this.oldTokenizeExpr(str);
   cachedTokenizedExpressions[str] = cloneStack(cached);
@@ -378,6 +457,7 @@ Scene.prototype.tokenizeExpr = function cached_tokenizeExpr(str) {
 // }
 
 Scene.prototype.ending = function () {
+  this.paragraph();
   this.reset();
   this.finished = true;
 }
@@ -398,12 +478,14 @@ Scene.prototype.finish = Scene.prototype.autofinish = function random_finish(but
       throw new Error(this.lineMsg() + "Trying to go to scene " + nextSceneName + " but that scene requires purchase");
     }
     this.finished = true;
+    this.paragraph();
     // if there are no more scenes, then just halt
     if (!nextSceneName) {
         return;
     }
     var scene = new Scene(nextSceneName, this.stats, this.nav, this.debugMode);
-    this.paragraph();
+    if (buttonText === undefined || buttonText === "") buttonText = "Next Chapter";
+    buttonText = this.replaceVariables(buttonText);
     println("*finish " + buttonText);
     println("");
     scene.resetPage();
@@ -428,7 +510,7 @@ Scene.prototype.purchase = function random_purchase(data) {
   if (typeof this.temps["choice_purchased_"+product] === "undefined") throw new Error(this.lineMsg() + "Didn't check_purchases on this page");
 };
 
-Scene.prototype.choice = function choice(data, fakeChoice) {
+Scene.prototype.choice = function choice(data) {
     var groups = ["choice"];
     if (data) groups = data.split(/ /);
     var choiceLine = this.lineNum;
@@ -439,13 +521,11 @@ Scene.prototype.choice = function choice(data, fakeChoice) {
     var index = chooseIndex(flattenedOptions, choiceLine, this.name);
 
     var item = flattenedOptions[index];
-    if (this.fakeChoice) {
-      this.temps.fakeChoiceEnd = this.lineNum;
-      var fakeChoiceLines = {};
-      for (var i = 0; i < options.length; i++) {
-        fakeChoiceLines[options[i].line-1] = 1;
-      };
-      this.temps.fakeChoiceLines = fakeChoiceLines;
+    if (!this.temps._choiceEnds) {
+        this.temps._choiceEnds = {};
+    }
+    for (i = 0; i < options.length; i++) {
+        this.temps._choiceEnds[options[i].line-1] = this.lineNum;
     }
     this.paragraph();
     var optionName = this.replaceVariables(item.ultimateOption.name);
@@ -611,8 +691,9 @@ function randomtestAsync(i, showCoverage) {
 function randomtest() {
   var start = new Date().getTime();
   randomSeed *= 1;
-  for (i = 0; i < iterations; i++) {
+  for (var i = 0; i < iterations; i++) {
     console.log("*****Seed " + (i+randomSeed));
+    nav.resetStats(stats);
     timeout = null;
     Math.seedrandom(i+randomSeed);
     var scene = new Scene(nav.getStartupScene(), stats, nav, false);
@@ -625,6 +706,10 @@ function randomtest() {
       }
       println(); // flush buffer
     } catch (e) {
+      if (e.message == "record balance") {
+        iterations++;
+        continue;
+      }
       console.log("RANDOMTEST FAILED: " + e);
       if (isRhino) {
         java.lang.System.exit(1);
@@ -635,13 +720,12 @@ function randomtest() {
         break;
       }
     }
-    nav.resetStats(stats);
   }
 
   if (!processExit) {
     if (showText) console.log("Word count: " + wordCount);
     if (showCoverage) {
-      for (i = 0; i < sceneNames.length; i++) {
+      for (var i = 0; i < sceneNames.length; i++) {
         var sceneName = sceneNames[i];
         var sceneLines = slurpFileLines('web/'+gameName+'/scenes/'+sceneName+'.txt');
         var sceneCoverage = coverage[sceneName];
@@ -653,6 +737,36 @@ function randomtest() {
     console.log("RANDOMTEST PASSED");
     var duration = (new Date().getTime() - start)/1000;
     console.log("Time: " + duration + "s")
+    if (recordBalance) {
+      (function() {
+        for (var sceneName in balanceValues) {
+          for (var id in balanceValues[sceneName]) {
+            var values = balanceValues[sceneName][id].sort();
+            var histogram = [{value:values[0], count:1}];
+            for (var i = 1; i < values.length; i++) {
+              if (values[i] == histogram[histogram.length-1].value) {
+                histogram[histogram.length-1].count++;
+              } else {
+                histogram.push({value:values[i], count:1});
+              }
+            }
+            console.log(sceneName + " " + id + " observed values ("+values.length+")");
+            for (i = 0; i < histogram.length; i++) {
+              if (histogram[i].count > 1) {
+                console.log("  " + histogram[i].value + " x" + histogram[i].count);
+              } else {
+                console.log("  " + histogram[i].value);
+              }
+            }
+          }
+        }
+        for (var statName in stats) {
+          if (/^auto_.+?_.+$/.test(statName)) {
+            console.log("*create " + statName + " " + stats[statName]);
+          }
+        }
+      })();
+    }
   }
 }
 if (!delay) randomtest();

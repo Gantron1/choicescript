@@ -30,6 +30,10 @@ _global = this;
   _global.isMobile = _global.isWebOS || /Mobile/.test(userAgent);
   _global.isFile = /^file:/.test(url);
   _global.isXul = /^chrome:/.test(url);
+  try {
+    _global.greenworks = require('greenworks');
+    _global.isGreenworks = true;
+  } catch (ignored) {}
   _global.isWinOldApp = false;
   try {
     isWinOldApp = window.external.IsWinOldApp();
@@ -40,6 +44,7 @@ _global = this;
   _global.isSafari = /Safari/.test(userAgent);
   _global.isIE = /(MSIE|Trident)/.test(userAgent);
   _global.isIPad = /iPad/.test(userAgent);
+  _global.isIPhone = /iPhone/.test(userAgent);
   _global.isKindleFire = /Kindle Fire/.test(userAgent);
   _global.isWinStoreApp = "ms-appx:" == protocol;
   _global.isCef = !!_global.cefQuery;
@@ -669,9 +674,13 @@ function loadAndRestoreGame(slot, forcedScene) {
     safeCall(null, function() {
       var state = null;
       if (ok && value && ""+value) {
+        console.log("successfully loaded slot " + slot);
         state = jsonParse(value);
       } else if (window.Persist.type == "androidStorage" && document.cookie) {
         return upgradeAndroidCookies(slot,forcedScene);
+      } else if (slot == "backup") {
+        console.log("loadAndRestoreGame couldn't find backup");
+        return loadAndRestoreGame("", forcedScene);
       }
 
       restoreGame(state, forcedScene);
@@ -679,7 +688,7 @@ function loadAndRestoreGame(slot, forcedScene) {
   }
 
   if (!slot) slot = "";
-  if (window.pseudoSave && pseudoSave[""]) return valueLoaded(true, pseudoSave[""]);
+  if (window.pseudoSave && pseudoSave[slot]) return valueLoaded(true, pseudoSave[slot]);
   if (!initStore()) return restoreGame(null, forcedScene);
   window.store.get("state"+slot, valueLoaded);
 }
@@ -846,6 +855,7 @@ function num(x, line) {
     if (!line) line = "UNKNOWN";
     var x_num = parseFloat(x);
     if (isNaN(x_num)) throw new Error("line "+line+": Not a number: " + x);
+    if (!isFinite(x_num)) throw new Error("line "+line+": Not finite " + x);
     return x_num;
 }
 
@@ -954,4 +964,23 @@ function parseDateStringInCurrentTimezone(YYYY_MM_DD, line) {
   var dayOfMonth = parseInt(result[3],10);
   var shortMonthString = shortMonthStrings[oneBasedMonthNumber];
   return new Date(shortMonthString + " " + dayOfMonth + ", " + fullYear);
+}
+
+function matchBracket(line, brackets, startIndex) {
+  var openBracket = brackets[0];
+  var closeBracket = brackets[1];
+  var brackets = 0;
+  for (var i = startIndex; i < line.length; i++) {
+    var c = line.charAt(i);
+    if (c === openBracket) {
+      brackets++;
+    } else if (c === closeBracket) {
+      if (brackets) {
+        brackets--;
+      } else {
+        return i;
+      }
+    }
+  }
+  return -1;
 }
