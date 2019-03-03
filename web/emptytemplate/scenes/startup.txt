@@ -4,12 +4,25 @@
 
 *title Title of Your GREAT Story
 *author Frankie Lee
+
+*comment DESCRIPTION: (Not used yet. When index.html has a better layout, it might be nice for each story to have a description.)
+
+*comment VISIBLE: no (Set to "yes" to make `updbbio` automatically add this story to index.html)
+
 *scene_list
 	startup
 
 *create debug true
 *create secretjump false
+*create jumpscene ""
 *create jumplabel ""
+
+*comment How to use jumplabel:
+*comment 
+*comment At top of jumpscene (but after *temp's), put:
+*comment 
+*comment *if jumplabel != ""
+*comment 	*gotoref jumplabel
 
 *comment *********************
 *comment **  ACHIEVEMENTS   **
@@ -37,11 +50,30 @@
 *comment *************************
 *comment *************************
 
+*if debug and (secretjump and (jumpscene != ""))
+	*goto_scene_ref jumpscene
+
+*if debug
+	*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=30&text=TITLE%20OF%20THIS%20GREAT%20STORY&color=000000&matte=F0D6AD&shadow=inv
+	*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=40&text=Test%20Menu&color=000000&matte=F0D6AD&shadow=inv
+
+	Testing Notes:
+
+	* None yet.
+
+	*comment *sm_init <unique_gamecode> | 11
+	*label sm_top
+	*choice
+		#Play from the beginning.
+			*goto sm_done
+
+*label sm_done
+
 *comment *********************
 *comment **    THE GAME!    **
 *comment *********************
 
-*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=40&text=The%20Travailer%20Sagas:&color=000000&matte=F0D6AD&shadow=inv
+*image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=40&text=SeductQuest:&color=000000&matte=F0D6AD&shadow=inv
 *image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=30&text=TITLE%20OF%20THIS%20GREAT%20STORY&color=000000&matte=F0D6AD&shadow=inv
 *image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=25&text=by&color=000000&matte=F0D6AD&shadow=inv
 *image http://herbaloutfitters.com/textimage/text_image.php?font=MervaleScript-Regular&fontsize=25&text=Frankie%20Lee&color=000000&matte=F0D6AD&shadow=inv

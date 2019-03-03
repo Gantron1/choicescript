@@ -49,7 +49,39 @@
  * 8. Pauses at end before looping. Can this be fixed? Maybe if zoom, rate, etc, don't change, then no need to call those commands. If just simple loop, everything the same, might be faster without them.
  *
  * 15. Support for other video formats and fallback.
+ *
+ * 17. Large video file was choppy and then paused itself and did not start up. Might have worked if bitbucket.io was configured for byte range requests, but it is not. It does give the right type (video/mp4), and the video should be web optimized (has moov near the beginning). See: https://stackoverflow.com/questions/10328401/html5-how-to-stream-large-mp4-files . Maybe need to preload (http://dinbror.dk/blog/how-to-preload-entire-html5-video-before-play-solved/):
+ *
+ *Solution #4, ajax and bloburl (works)
+
+You can force the browser to download a video by making a GET request to the video url. If the response type is blob you can afterwards create an object URL. The URL lifetime is tied to the document in the window on which it was created so you can set it as source on the video player. And voila you now have a video player with a entirely preloaded video:
+
+var req = new XMLHttpRequest();
+req.open('GET', 'video.mp4', true);
+req.responseType = 'blob';
+
+req.onload = function() {
+   // Onload is triggered even on 404
+   // so we need to check the status code
+   if (this.status === 200) {
+      var videoBlob = this.response;
+      var vid = URL.createObjectURL(videoBlob); // IE10+
+      // Video is now downloaded
+      // and we can set it as source on the video element
+      video.src = vid;
+   }
+}
+req.onerror = function() {
+   // Error
+}
+
+req.send();
+Notes:
+createObjectURL() is supported from IE10+. Be aware that each time you call createObjectURL(), a new object URL is created, even if you’ve already created one for the same object [source].
+
+Because we making a ajax request you might need to handle CORS!
  * 
+ * 18. But... on bitbucket, each choice causes long pause. Maybe <video> element is being reloaded? Try putting in own div with choices calling *script's that execute DOM commands to the video. See: https://imelgrat.me/javascript/control-html5-audio-video-javascript-api/
  */
 
 // Object that holds global variables for the video 
@@ -328,7 +360,7 @@ console.log("NEW VIDEO");
 	}
 
 	// Add video tag to existing HTML of the main text div
-	var videotag = '<div class="stage" id="stage" style="position:relative;overflow:hidden;"><video style="position:absolute;top:0;left:0;" '+autoplayText+loopText+controlsText+'> <source src="'+thevideo+startEndText+'"> Your browser does not support the video tag.  </video></div>';
+	var videotag = '<div class="stage" id="stage" style="position:relative;overflow:hidden;"><video class="video-js" style="position:absolute;top:0;left:0;" '+autoplayText+loopText+controlsText+' preload="auto" data-setup="{}"> <source src="'+thevideo+startEndText+'"> Your browser does not support the video tag.  </video></div>';
 
 	//alert(videotag);
 
@@ -765,6 +797,12 @@ function MouseWheelHandler(e) {
 }
 */
 
+	// Why was this all the way at the bottom after all the below functions? Moved it here, and things seem to work. Could not find old, working version to compare with.
+
+// Call the function with requestAnimationFrame to play only the specified range.
+playEditorRange();
+}
+
 var playEditorRange = function() {
 	if(round(v.currentTime, 100) >= velt.videoElementEnd) {
 		v.currentTime = velt.videoElementStart;
@@ -794,8 +832,4 @@ function round(value, decimals) {
 
 function fixFloat(value, decimals) {
   return Math.round((value+0.00001)*decimals)/decimals;
-}
-
-// Call the function with requestAnimationFrame to play only the specified range.
-playEditorRange();
 }
