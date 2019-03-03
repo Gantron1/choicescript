@@ -214,3 +214,24 @@
 [submodule "web/nightly"]
 	path = web/nightly
 	url = git@bitbucket.org:Gantron/nightly.git
+[submodule "ilylana"]
+	path = ilylana
+	url = git@bitbucket.org:Gantron/ilylana.git
+[submodule "mask"]
+	path = mask
+	url = git@bitbucket.org:Gantron/mask.git
+[submodule "muriel"]
+	path = muriel
+	url = git@bitbucket.org:Gantron/muriel.git
+[submodule "nyx"]
+	path = nyx
+	url = git@bitbucket.org:Gantron/nyx.git
+[submodule "randomsex"]
+	path = randomsex
+	url = git@bitbucket.org:Gantron/randomsex.git
+[submodule "squeen"]
+	path = squeen
+	url = git@bitbucket.org:Gantron/squeen.git
+[submodule "tamcock"]
+	path = tamcock
+	url = git@bitbucket.org:Gantron/tamcock.git

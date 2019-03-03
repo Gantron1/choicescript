@@ -29,15 +29,16 @@ either express or implied.
 <script src="../persist.js"></script>
 <script src="../alertify.min.js"></script>
 <script src="../util.js"></script>
+<link href="../style.css" rel="stylesheet" type="text/css">
 <style id="dynamic"></style>
 <script src="../ui.js"></script>
 <script src="../scene.js"></script>
 <script src="../navigator.js"></script>
 <script src="mygame.js"></script>
+<script src="../annotator.js"></script>
 <script src="../smPluginMenuAddon.js"></script>
 <script src="../video.js"></script>
 <link href="../alertify.css" rel="stylesheet" type="text/css">
-<link href="../style.css" rel="stylesheet" type="text/css">
 <!--[if IE 6]><style>.alertify-logs { position: absolute; }</style><![endif]-->
 <link rel="icon" type="image/vnd.microsoft.icon" href="../favicon.ico">
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,8 +51,7 @@ window.storeName = null;
 var rootDir = "../";
 </script>
 </head>
-<body>
-<script type="text/javascript" src="../orphus/orphus.js"></script>
+<body><div class="container" id="container1">
 <div id="advertisement">
 </div>
 <div id="header">
@@ -63,7 +63,13 @@ var rootDir = "../";
   <p id="headerLinks">
       <!-- <a href="credits.html" id="aboutLink" class="spacedLink">About</a> -->
     </p>
-  <p id="buttons"><button id="statsButton" class="spacedLink" onclick="showStats()">Show Stats</button> <button id="restartButton" class="spacedLink" onclick="restartGame('prompt')">Restart</button> <button id="achievementsButton" onclick="showAchievements()" class="spacedLink" style="display: none">Achievements</button></p>
+  <p id="buttons">
+    <button id="statsButton" class="spacedLink" onclick="showStats()">Show Stats</button>
+    <button id="restartButton" class="spacedLink" onclick="restartGame('prompt')">Restart</button>
+    <button id="achievementsButton" onclick="showAchievements()" class="spacedLink" style="display: none">Achievements</button>
+    <button id="bugButton" onclick="reportBug()" class="spacedLink" style="display: none">Report Bug</button>
+    <button id="menuButton" onclick="textOptionsMenu()" class="spacedLink">Settings</button>
+  </p>
 </div>
 <div id="main">
 <div id="text">
@@ -73,14 +79,6 @@ startLoading();
 </script>
 </div>
 <div id="mobileLinks" class="webOnly">
-  <!-- INSERT fixed links
-  <p class="mobileBadges">
-    <a class='spacedLink' id='iphoneLink' href='http://itunes.apple.com/us/app/choice-of-broadsides/id365660770'><img src='../icons/appstore.png' style='height: 3em;'></a>
-    <a class='spacedLink' id='androidLink' href='https://play.google.com/store/apps/details?id=com.choiceofgames.broadsides'><img src='../icons/droid.png' style='height: 3em;'></a>
-    <a class='spacedLink' id='kindleLink' href='http://www.amazon.com/Choice-of-Broadsides/dp/B004FRH3PO'><img src='../icons/kindle.png' style='height: 3em;'></a>
-    <a class='spacedLink' id='chromeLink' href='https://chrome.google.com/webstore/detail/donhlnjhcdnocioldondhgngncepnpch'><img src='../icons/chrome.png' style='height: 3em;'></a>
-  </p>
-  -->
 </div>
 <p>If you find a typo or have a suggestion, highlight it, and hit ctrl-enter to activate the Orphus typo reporting function.</p>
 <a href="http://orphus.ru" id="orphus" target="_blank"><img alt="Orphus system" src="../orphus/orphus.gif" border="0" width="197" height="39" /></a>
